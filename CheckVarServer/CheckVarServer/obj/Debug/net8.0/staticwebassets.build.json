@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "u19h3wHfzW3HyNcKOQ03YDy3k/zHhIW5nsfjS4fhq7Q=",
+  "Source": "CheckVarServer",
+  "BasePath": "_content/CheckVarServer",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

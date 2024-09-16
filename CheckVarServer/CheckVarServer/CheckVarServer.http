@@ -1,0 +1,9 @@
+@CheckVarServer_HostAddress = http://localhost:5196
+
+POST {{CheckVarServer_HostAddress}}/checkvar/
+Content-Type: application/json
+
+{
+  "keyword": "Thao Minh"
+}
+###

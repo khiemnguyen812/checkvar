@@ -35,10 +35,9 @@ app.MapPost("/checkvar", async (HttpContext context) =>
     var data = JsonSerializer.Deserialize<Dictionary<string, string>>(body);
     var keyword = data["keyword"];
 
-    var filePath = "data.csv"; // Ensure the correct path
-    var pythonScriptPath = "solve.py"; // Ensure the correct path
+    var filePath = "data.csv"; 
+    var pythonScriptPath = "solve.py"; 
 
-    // Wrap keyword in quotes to handle spaces
     var quotedKeyword = $"\"{keyword}\"";
 
     var start = new ProcessStartInfo
@@ -47,10 +46,10 @@ app.MapPost("/checkvar", async (HttpContext context) =>
         Arguments = $"{pythonScriptPath} {filePath} {quotedKeyword}",
         UseShellExecute = false,
         RedirectStandardOutput = true,
-        RedirectStandardError = true, // Redirect errors
+        RedirectStandardError = true, 
         CreateNoWindow = true,
-        StandardOutputEncoding = Encoding.UTF8, // Ensure UTF-8 encoding
-        StandardErrorEncoding = Encoding.UTF8 // Ensure UTF-8 encoding
+        StandardOutputEncoding = Encoding.UTF8, 
+        StandardErrorEncoding = Encoding.UTF8 
     };
 
     using var process = Process.Start(start);

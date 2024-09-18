@@ -28,6 +28,8 @@ app.UseHttpsRedirection();
 // Use CORS policy
 app.UseCors("AllowAllOrigins");
 
+var lines = File.ReadAllLines("data.csv");
+
 app.MapPost("/checkvar", async (HttpContext context) =>
 {
     using var reader = new StreamReader(context.Request.Body);
@@ -35,46 +37,28 @@ app.MapPost("/checkvar", async (HttpContext context) =>
     var data = JsonSerializer.Deserialize<Dictionary<string, string>>(body);
     var keyword = data["keyword"];
 
-    var filePath = "data.csv"; 
-    var pythonScriptPath = "solve.py"; 
+    var results = new List<Dictionary<string, object>>();
 
-    var quotedKeyword = $"\"{keyword}\"";
-
-    var start = new ProcessStartInfo
+    //example line: 5218.87149 01/09/2024,,3000.0,,272986.010924.101858.DO DUC LOI chuyen tien
+    foreach (var line in lines)
     {
-        FileName = "python",
-        Arguments = $"{pythonScriptPath} {filePath} {quotedKeyword}",
-        UseShellExecute = false,
-        RedirectStandardOutput = true,
-        RedirectStandardError = true, 
-        CreateNoWindow = true,
-        StandardOutputEncoding = Encoding.UTF8, 
-        StandardErrorEncoding = Encoding.UTF8 
-    };
-
-    using var process = Process.Start(start);
-    using var outputReader = process.StandardOutput;
-    var result = await outputReader.ReadToEndAsync();
-    process.WaitForExit();
-
-    // Check for errors
-    var error = await process.StandardError.ReadToEndAsync();
-    if (!string.IsNullOrEmpty(error))
-    {
-        Console.WriteLine("Error: " + error);
-        return Results.Problem("Error executing Python script: " + error);
+        bool isMatch = line.Contains(keyword);
+        if (isMatch)
+        {
+            var parts = line.Split(',');
+            var DocNo = parts[0];
+            var Credit = parts[2];
+            var TransactionsInDetail = line.Split(",,").Last();
+            var obj = new Dictionary<string, object>
+            {
+                { "DocNo", DocNo },
+                { "Credit", Credit },
+                { "TransactionsInDetail", TransactionsInDetail }
+            };
+            results.Add(obj);
+        }
     }
-
-    // Check for result
-    if (string.IsNullOrEmpty(result))
-    {
-        Console.WriteLine("No output from Python script.");
-        return Results.Problem("No output from Python script.");
-    }
-
-    var results = JsonSerializer.Deserialize<List<Dictionary<string, object>>>(result);
-
-    return Results.Json(results);
+    return Results.Json(results);   
 });
 
 app.Run();

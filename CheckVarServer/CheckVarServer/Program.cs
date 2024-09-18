@@ -35,14 +35,14 @@ app.MapPost("/checkvar", async (HttpContext context) =>
     using var reader = new StreamReader(context.Request.Body);
     var body = await reader.ReadToEndAsync();
     var data = JsonSerializer.Deserialize<Dictionary<string, string>>(body);
-    var keyword = data["keyword"];
+    var keyword = data["keyword"].ToLower();
 
     var results = new List<Dictionary<string, object>>();
 
     //example line: 5218.87149 01/09/2024,,3000.0,,272986.010924.101858.DO DUC LOI chuyen tien
     foreach (var line in lines)
     {
-        bool isMatch = line.Contains(keyword);
+        bool isMatch = line.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0;
         if (isMatch)
         {
             var parts = line.Split(',');

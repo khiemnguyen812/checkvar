@@ -6,6 +6,7 @@ import Toolbar from '@mui/material/Toolbar';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import axios from 'axios';
+import { useState } from 'react';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -47,8 +48,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
   },
 }));
-export default function SearchAppBar({ onSearch , loading, setLoading }) {
-  const [keyword, setKeyword] = React.useState('');
+export default function SearchAppBar({ onSearch , setLoading }) {
+  const [keyword, setKeyword] = useState('');
 
   const handleSearchChange = (event) => {
     setKeyword(event.target.value);
@@ -56,7 +57,7 @@ export default function SearchAppBar({ onSearch , loading, setLoading }) {
 
   const handleSearchSubmit = async (event) => {
     event.preventDefault();
-    if (keyword.length > 2) { // Trigger search if keyword length is greater than 2
+    if (keyword.length > 0) { // Trigger search if keyword length is greater than 0
       setLoading(true);
       try {
         const response = await axios.post('https://localhost:44342/checkvar', { keyword });

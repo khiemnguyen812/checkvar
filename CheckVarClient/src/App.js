@@ -6,7 +6,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 function App() {
   const [rows, setRows] = useState([]);
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleSearch = (data) => {
     setRows(data);
@@ -14,7 +14,7 @@ function App() {
 
   return (
     <div className="App">
-      <SearchAppBar onSearch={handleSearch} loading={loading} setLoading={setLoading} />
+      <SearchAppBar onSearch={handleSearch} setLoading={setLoading} />
       <DataTable rows={rows} />
       {loading && <CircularProgress size={120} style={{ marginLeft: 10 }} />}
     </div>
